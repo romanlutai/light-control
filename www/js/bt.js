@@ -1,9 +1,20 @@
-// const device = require('device');
-// const bluetoothSerial = require('bluetoothSerial');
-
-//var btList = null;
-
+var btListHTML = document.getElementById('bt_list');
 var bt = {
+  check: function() {
+    btListHTML.innerHTML = ' beforewords ';
+    bluetoothSerial.isEnabled(
+//      var btListHTML = document.getElementById('bt_list');
+      function() {
+          console.log("Bluetooth is enabled");
+          btListHTML.innerHTML += 'enabled';
+      },
+      function() {
+          console.log("Bluetooth is *not* enabled");
+          btListHTML.innerHTML += 'NOT enabled';
+      }
+    );
+    btListHTML.innerHTML += ' afterwords ';
+  },
   scan: function() {
     var btListHTML = document.getElementById('bt_list');
     btListHTML.innerHTML = "";
@@ -33,4 +44,9 @@ var bt = {
   pair: function(deviceId) {
     console.log(`User chose device Id ${deviceId}`);
   }
+}
+
+function test() {
+  var t = new Date();
+  document.getElementById('bt_list').innerHTML = t.getTime();
 }
