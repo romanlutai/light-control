@@ -9,5 +9,7 @@ To proof the issue was written a simple script to check if Bluetooth is enabled 
 As a result, the script works on PC, but freezes on the phone at the function `BluetoothSerial.isEnabled()`.
 
 Also, the performance of the function `BluetoothSerial.list()` looks suspicious even on PC: it returns **identical** list as in the Readme for the module. On the phone it also freezes.
+### Solution
+The script works perfectly after building the app even though it wasn't connesting in test mode.
 
 
