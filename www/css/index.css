@@ -104,6 +104,9 @@ body {
     border-bottom:1px solid #ccc;
     padding: 4px 2px;
 }
+.hide {
+    display:none;
+}
 
 #colorSpace {
     margin: 4px auto;
