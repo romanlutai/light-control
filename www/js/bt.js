@@ -2,7 +2,9 @@ var btListHTML = document.getElementById('bt_list');
 var greenStatus = document.getElementById('green');
 var bt = {
   check: function() {
-    btListHTML.classList.toggle("hide");
+    if (btListHTML.classList.contains('hide')) {
+      btListHTML.classList.remove('hide');
+    }
     semiLog.log('start');
     bluetoothSerial.isEnabled(
       function() {
