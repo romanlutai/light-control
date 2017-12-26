@@ -49,19 +49,19 @@ var bt = {
   },
   scan: function() { // For Android Only
     semiLog.log('Android scanning for unpaired devices');
-    bluetoothSerial.discoverUnpaired(function(devices) {
-      btListHTML.insertAdjacentHTML('afterend',`<div class="comments bright">scanning...</div>`);
-      devices.forEach(function(device) {
-          console.log(device.id);
-          btListHTML.insertAdjacentHTML('beforeend',`<li onclick="bt.pair('${device.name}','${device.id}')">${device.name}</li>`);
-      })
+    btListHTML.insertAdjacentHTML('beforeend',`<li>scanning...</li>`);
+    bluetoothSerial.setDeviceDiscoveredListener(function (device) {
+      console.log(device.id);
+      btListHTML.insertAdjacentHTML('beforeend',`<li onclick="bt.pair('${device.name}','${device.id}')">${device.name}</li>`);
     }, function(failure){console.log(failure);} );
+    bluetoothSerial.discoverUnpaired( devices , function(failure){console.log(failure);} );
   },
   pair: function(deviceName,deviceId) {
+    bluetoothSerial.clearDeviceDiscoveredListener();
+    btListHTML.classList.toggle("hide");
     semiLog.clc();
     semiLog.log(`You chose device ${deviceName} Id ${deviceId}`);
     greenStatus.innerHTML = deviceName;
-    btListHTML.classList.toggle("hide");
   }
 }
 
