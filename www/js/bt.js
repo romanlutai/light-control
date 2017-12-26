@@ -96,14 +96,14 @@ var bt = {
   },
   pair: function(deviceName,deviceId) {
     if(device.platform == 'Android') bluetoothSerial.clearDeviceDiscoveredListener();
-    semiLog.log("Connecting to device ${deviceName}");
+    semiLog.log(`Connecting to device ${deviceName}`);
     bluetoothSerial.connect(deviceId, function(success){
       btListHTML.hide();
       semiLog.clc();
       semiLog.log(`Successfully connected to the device ${deviceName} Id ${deviceId}`);
       greenStatus.innerHTML = deviceName;
     }, function (failure) {
-      semiLog.log("Connection failed: ${failure}");
+      semiLog.log(`Connection failed: ${failure}`);
     });
   }
 }
