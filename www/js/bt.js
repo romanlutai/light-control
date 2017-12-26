@@ -53,10 +53,10 @@ var bt = {
     bluetoothSerial.setDeviceDiscoveredListener(function (device) {
       console.log(device.id);
       btListHTML.insertAdjacentHTML('beforeend',`<li onclick="bt.pair('${device.name}','${device.id}')">${device.name}</li>`);
-    }, function(failure){console.log(failure);} );
+    }, function(failure){semiLog.log(failure);} );
     bluetoothSerial.discoverUnpaired( function(devices){
       bluetoothSerial.clearDeviceDiscoveredListener();
-    }, function(failure){console.log(failure);} );
+    }, function(failure){semiLog.log(failure);} );
   },
   pair: function(deviceName,deviceId) {
     bluetoothSerial.clearDeviceDiscoveredListener();
