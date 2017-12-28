@@ -38,27 +38,65 @@
     -->
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
 
+    <link rel="stylesheet" type="text/css" href="css/menu.css" />
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <title>Light Control</title>
 </head>
 
 <body>
     <div class="app">
-        <h1>Light Control by PhoneGap</h1>
+        <h1>Light Control</h1>
+        <h2>by PhoneGap</h2>
         <div id="deviceready" class="blink">
             <p class="event listening">Connecting to Device</p>
-            <p class="event received">Device is Ready</p>
+            <p class="event received" id="green">Choose the Bluetooth</p>
         </div>
         </br>
-        <button onclick="bt.scan()">Scan Bluetooth</button>
-        <div id="scan_bt_res">
+        <button onclick="semiLog.clc()">clc</button>
+        <button onclick="test()">test</button>
+        <button onclick="bt.check()">Scan Bluetooth</button>
+
+        <div class="comments dark" id="semiLog"><div class="logline"> Log is clear </div></div>
+        <div class="comments bright">
             <ul id="bt_list">
             </ul>
         </div>
+
+        <div id="colorSpace"></div>
+        <div id="currentRGB"></div>
+        <div id="status"></div>
+
+
+        <ul id="nav">
+            <li><a href="#"><img src="img/t1.png" /> Главная</a></li>
+            <li><a href="#" class="sub" onclick="togleshow('drop1')" id="drop1" tabindex="1"><img src="img/t2.png" />Bluetooth</a><img src="img/up.gif" alt="" />
+                <ul>
+                    <li><a href="#"><img src="img/empty.gif" />Ссылка 1</a></li>
+                    <li><a href="#"><img src="img/empty.gif" />Ссылка 2</a></li>
+                    <li><a href="#"><img src="img/empty.gif" />Ссылка 3</a></li>
+                    <li><a href="#"><img src="img/empty.gif" />Ссылка 4</a></li>
+                    <li><a href="#"><img src="img/empty.gif" />Ссылка 5</a></li>
+                </ul>
+            </li>
+            <li><a href="#" class="sub" tabindex="1"><img src="img/t3.png" />jQuery/JS</a><img src="img/up.gif" alt="" />
+                <ul>
+                    <li><a href="#"><img src="img/empty.gif" />Ссылка 6</a></li>
+                    <li><a href="#"><img src="img/empty.gif" />Ссылка 7</a></li>
+                    <li><a href="#"><img src="img/empty.gif" />Ссылка 8</a></li>
+                    <li><a href="#"><img src="img/empty.gif" />Ссылка 9</a></li>
+                    <li><a href="#"><img src="img/empty.gif" />Ссылка 10</a></li>
+                </ul>
+            </li>
+            <li><a href="#"><img src="img/t2.png" />PHP</a></li>
+        </ul>
+
     </div>
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/bt.js"></script>
+    <script type="text/javascript" src="js/menu.js"></script>
+    <script type="text/javascript" src="js/color-space.js"></script>
+    <script type="text/javascript" src="js/testOnReady.js"></script>
     <script type="text/javascript">
         app.initialize();
     </script>
