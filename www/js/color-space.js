@@ -175,6 +175,7 @@ function mouseRGB(element,e){
                 coord += " (Transparent color detected, cannot be converted to HEX)";
     }
     else {
+        activeBLE.sendRGB(pixelData[0], pixelData[1], pixelData[2]);
         var hex = "#" + ("000000" + rgbToHex(pixelData[0], pixelData[1], pixelData[2])).slice(-6);
         document.getElementById("currentRGB").style.backgroundColor = hex;
     }
