@@ -46,11 +46,11 @@ var bt = {
     btListHTML.show();
     semiLog.log('start');
     var self = this;
-    bluetoothSerial.isEnabled(
+    ble.isEnabled(
       function() {
         console.log("Bluetooth already ON");
         semiLog.log("Bluetooth is enabled");
-        self.list();
+        self.scan();
       },
       function() {
         console.log("Bluetooth is OFF");
@@ -62,11 +62,11 @@ var bt = {
   activate: function() {  // For Android Only
     var self = this;
     semiLog.log("Android OS");
-    bluetoothSerial.enable(
+    ble.enable(
       function() {
         console.log("You have enabled Bluetooth");
         semiLog.log("You have enabled Bluetooth");
-        self.list();
+        self.scan();
       },
       function() {
         console.log("The user did *not* enable Bluetooth");
@@ -74,37 +74,70 @@ var bt = {
       }
     );
   },
-  list: function() {
-    var self = this;
-    bluetoothSerial.list(function(devices) {
-        btListHTML.addBT(devices);
-        btListHTML.update();
-        if(device.platform == 'Android') self.scan();
-      }, function(failure){console.log(failure);}
-    );
-  },
   scan: function() { // For Android Only
-    semiLog.log('Android scanning for unpaired devices');
-    bluetoothSerial.setDeviceDiscoveredListener(function (device) {
+    semiLog.log('Scanning for BLE devices');
+    btListHTML.update();
+    ble.startScanWithOptions([],{}, function (device) {
       console.log(device.id);
       btListHTML.addBT();
       btListHTML.update();
     }, function(failure){semiLog.log(failure);} );
-    bluetoothSerial.discoverUnpaired( function(devices){
-      bluetoothSerial.clearDeviceDiscoveredListener();
-    }, function(failure){semiLog.log(failure);} );
   },
   pair: function(deviceName,deviceId) {
-    if(device.platform == 'Android') bluetoothSerial.clearDeviceDiscoveredListener();
+    ble.stopScan(
+      function(success){semiLog.log("Scan complete")},
+      function(failure){semiLog.log("stopScan failed: "+failure)}
+    );
     semiLog.log(`Connecting to device ${deviceName}`);
-    bluetoothSerial.connect(deviceId, function(success){
+    ble.connect(deviceId, function(success){
       btListHTML.hide();
       semiLog.clc();
       semiLog.log(`Successfully connected to the device ${deviceName} Id ${deviceId}`);
       greenStatus.innerHTML = deviceName;
+      activeBLE.connected(deviceName,deviceId);
     }, function (failure) {
       semiLog.log(`Connection failed: ${failure}`);
     });
+  }
+}
+
+
+var activeBLE = {
+  connected: function(name, id){
+    this.name = name;
+    this.id = id;
+  },
+
+  write_service_UUID: "0000ffe5-0000-1000-8000-00805f9b34fb",
+  write_charachteristic_UUID: "0000FFE9-0000-1000-8000-00805F9B34FB",
+  readUUID : "0000FFE4-0000-1000-8000-00805F9B34FB",
+  infoUUID : "2A00",
+
+  sendRGB: function(r,g,b){
+    ble.write(
+      this.id,
+      this.write_service_UUID,
+      this.write_charachteristic_UUID,
+      this.messageRGB(r,g,b),
+      function(success){},
+      function(failure){
+        alert("Sending data failed: "+failure);
+      }
+    );
+  },
+  messageRGB:function(r,g,b){
+    if (r > 255 || g > 255 || b > 255)
+        throw "Invalid color component";
+    return this.encodeBytes([0x56,r,g,b,0x00,0xF0,0xAA]);
+  },
+  encodeBytes:function(arr){
+    var message = 0;
+    var length = -16;
+    arr.forEach(function(b){
+      message = (message << 16) | b;
+      length += 16;
+    });
+    return message.toString(32);
   }
 }
 
