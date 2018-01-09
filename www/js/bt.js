@@ -89,6 +89,7 @@ var bt = {
       function(failure){semiLog.log("stopScan failed: "+failure)}
     );
     semiLog.log(`Connecting to device ${deviceName}`);
+    activeBLE.connected(deviceName,deviceId);
     ble.connect(deviceId, function(success){
       btListHTML.hide();
       semiLog.clc();
@@ -130,14 +131,29 @@ var activeBLE = {
         throw "Invalid color component";
     return this.encodeBytes([0x56,r,g,b,0x00,0xF0,0xAA]);
   },
+
+  sendSwitch: function(off){
+    ble.write(
+      this.id,
+      this.write_service_UUID,
+      this.write_charachteristic_UUID,
+      this.messageSwitch(off),
+      function(success){},
+      function(failure){
+        alert("Sending data failed: "+failure);
+      }
+    );
+  },
+  messageSwitch: function(off){
+    return this.encodeBytes([0xCC,0x23+off,0x33]);
+  },
+
   encodeBytes:function(arr){
-    var message = 0;
-    var length = -16;
-    arr.forEach(function(b){
-      message = (message << 16) | b;
-      length += 16;
-    });
-    return message.toString(32);
+    var message = new Uint8Array(arr.length);
+    for (var i=0 ; i<arr.length ; i++){
+      message[i] = arr[i];
+    }
+    return message.buffer;
   }
 }
 
@@ -156,5 +172,6 @@ var semiLog = {
 function test() {
   var t = new Date();
   semiLog.log( t.getTime() );
+  ble.disconnect(activeBLE.id,function(success){semiLog.log('Successfully disconnect')},function(failure){semiLog.log(failure)});
 }
 
