@@ -102,6 +102,7 @@ var bt = {
   }
 }
 
+
 var activeBLE = {
   connected: function(name, id){
     this.name = name;
@@ -170,7 +171,7 @@ var semiLog = {
 
 function test() {
   var t = new Date();
-  semiLog.log( t.getTime() );
+  semiLog.log( "Time in ms: "+t.getTime() );
   ble.disconnect(activeBLE.id,function(success){semiLog.log('Successfully disconnect')},function(failure){semiLog.log(failure)});
 }
 
