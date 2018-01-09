@@ -102,7 +102,6 @@ var bt = {
   }
 }
 
-
 var activeBLE = {
   connected: function(name, id){
     this.name = name;
