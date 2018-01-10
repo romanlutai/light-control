@@ -114,17 +114,34 @@ var activeBLE = {
   readUUID : "0000FFE4-0000-1000-8000-00805F9B34FB",
   infoUUID : "2A00",
 
+  interval: 32,
+  getTime: function(){
+    var clock = new Date();
+    return clock.getTime();
+  },
+  watchInterval: function(){
+    if ( typeof this.lastCall === 'undefined') this.lastCall = this.getTime();
+    if ( (this.getTime()-this.lastCall) > this.interval ){
+      this.lastCall = this.getTime();
+      return true;
+    } else {
+      return false;
+    }
+  },
+
   sendRGB: function(r,g,b){
-    ble.write(
-      this.id,
-      this.write_service_UUID,
-      this.write_charachteristic_UUID,
-      this.messageRGB(r,g,b),
-      function(success){},
-      function(failure){
-        alert("Sending data failed: "+failure);
-      }
-    );
+    if ( this.watchInterval() ){
+      ble.write(
+        this.id,
+        this.write_service_UUID,
+        this.write_charachteristic_UUID,
+        this.messageRGB(r,g,b),
+        function(success){},
+        function(failure){
+          semiLog.log("Sending data failed: "+failure);
+        }
+      );
+    }
   },
   messageRGB:function(r,g,b){
     if (r > 255 || g > 255 || b > 255)
@@ -132,19 +149,19 @@ var activeBLE = {
     return this.encodeBytes([0x56,r,g,b,0x00,0xF0,0xAA]);
   },
 
-  sendSwitch: function(off){
+  sendSwitch: function(isOff){
     ble.write(
       this.id,
       this.write_service_UUID,
       this.write_charachteristic_UUID,
-      this.messageSwitch(off),
+      this.messageSwitch(isOff),
       function(success){},
       function(failure){
         alert("Sending data failed: "+failure);
       }
     );
   },
-  messageSwitch: function(off){
+  messageSwitch: function(isOff){
     return this.encodeBytes([0xCC,0x23+off,0x33]);
   },
 
