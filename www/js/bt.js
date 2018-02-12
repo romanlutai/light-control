@@ -6,11 +6,10 @@ function ListHTML (id) {
     var self = this;
     if (devices instanceof Array) {
       devices.forEach(function(device){
-        console.log(device.id);
         self.list[String(device.id)] = device.name;
       });
     } else {
-      self.list[String(device.id)] = devices.name;
+      self.list[String(devices.id)] = devices.name;
     }
   };
 
@@ -78,8 +77,8 @@ var bt = {
     semiLog.log('Scanning for BLE devices');
     btListHTML.update();
     ble.startScanWithOptions([],{}, function (device) {
-      console.log(device.id);
-      btListHTML.addBT();
+      semiLog.log(device.id);
+      btListHTML.addBT(device);
       btListHTML.update();
     }, function(failure){semiLog.log(failure);} );
   },
@@ -107,36 +106,29 @@ var activeBLE = {
   connected: function(name, id){
     this.name = name;
     this.id = id;
+    this.active = true;
   },
 
+  active: false,
   write_service_UUID: "0000ffe5-0000-1000-8000-00805f9b34fb",
   write_charachteristic_UUID: "0000FFE9-0000-1000-8000-00805F9B34FB",
   readUUID : "0000FFE4-0000-1000-8000-00805F9B34FB",
   infoUUID : "2A00",
 
-  interval: 32,
-  getTime: function(){
-    var clock = new Date();
-    return clock.getTime();
-  },
-  watchInterval: function(){
-    if ( typeof this.lastCall === 'undefined') this.lastCall = this.getTime();
-    if ( (this.getTime()-this.lastCall) > this.interval ){
-      this.lastCall = this.getTime();
-      return true;
-    } else {
-      return false;
-    }
-  },
+  jono: 0,
 
   sendRGB: function(r,g,b){
-    if ( this.watchInterval() ){
+    if ( this.jono < 3 ){
+      this.jono++;
+      var self = this;
       ble.write(
         this.id,
         this.write_service_UUID,
         this.write_charachteristic_UUID,
         this.messageRGB(r,g,b),
-        function(success){},
+        function(success){
+          self.jono--;
+        },
         function(failure){
           semiLog.log("Sending data failed: "+failure);
         }
@@ -171,18 +163,6 @@ var activeBLE = {
       message[i] = arr[i];
     }
     return message.buffer;
-  }
-}
-
-var semiLog = {
-  log: function(message) {
-    logWindow = document.getElementById('semiLog');
-    console.log(message);
-    logWindow.insertAdjacentHTML('beforeend','<div class="logline">'+message+'</div>');
-  },
-  clc: function() {
-    logWindow = document.getElementById('semiLog');
-    logWindow.innerHTML = '';
   }
 }
 
