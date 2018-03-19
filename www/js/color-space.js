@@ -175,7 +175,7 @@ function activeColor (id,sliders) {
     for (var key in sliders) {
       document.getElementById(sliders[key]).value = self[key];
     }
-    if (activeBLE.active) activeBLE.sendRGB(this.r,this.g,this.b);
+    if (activeBLE.active) activeBLE.sendRGBW(this.r,this.g,this.b);
   };
 
   this.updateRGB = (r,g,b,v_change) => {

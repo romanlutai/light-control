@@ -117,7 +117,7 @@ var activeBLE = {
 
   jono: 0,
 
-  sendRGB: function(r,g,b){
+  sendRGBW: function(r,g,b,w = 0){
     if ( this.jono < 3 ){
       this.jono++;
       var self = this;
@@ -125,7 +125,7 @@ var activeBLE = {
         this.id,
         this.write_service_UUID,
         this.write_charachteristic_UUID,
-        this.messageRGB(r,g,b),
+        this.messageRGBW(r,g,b,w),
         function(success){
           self.jono--;
         },
@@ -135,10 +135,12 @@ var activeBLE = {
       );
     }
   },
-  messageRGB:function(r,g,b){
+  messageRGBW:function(r,g,b,w){
     if (r > 255 || g > 255 || b > 255)
         throw "Invalid color component";
-    return this.encodeBytes([0x56,r,g,b,0x00,0xF0,0xAA]);
+    var BYTEf = 0xF0;
+    if (w!=0) BYTEf = 0x0F;
+    return this.encodeBytes([0x56,r,g,b,w,BYTEf,0xAA]);
   },
 
   sendSwitch: function(isOff){
