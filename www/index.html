@@ -54,10 +54,11 @@
         <h1>Search for BT lamp</h1>
 
         </br>
-        <button onclick="semiLog.clc()">clc</button>
-        <button onclick="test()">test</button>
-        <button onclick="bt.check()">Scan Bluetooth</button>
-
+        <div style="display: flex">
+            <button style="flex-grow: 1" onclick="semiLog.clc()">clc</button>
+            <button style="flex-grow: 1" onclick="test()">test</button>
+            <button style="flex-grow: 2" onclick="bt.check()">Scan Bluetooth</button>
+        </div>
 
         <div class="comments bright">
             <ul class="hide" id="bt_list">
@@ -72,18 +73,41 @@
         <div id="colorSpace"></div>
         <div id="currentRGB"></div>
         <div class="slidecontainer">
-            <input type="range" min="0" max="1" step="0.01" class="slider" id="slider_HSV_v">
+            <input type="range" min="0" max="1" step="0.01" class="range" id="slider_HSV_v">
         </div>
+    </div>
+
+    <div class="app" id="layerWhite">
+        <h1>White brightness</h1>
+        <div class="slidecontainer vertical">
+            <input type="range" min="0" max="100" step="1" class="range vertical-highest-first" id="slider_White">
+        </div>
+    </div>
+
+    <div class="app" id="layerInfo">
+        <h1>Welcome</h1>
+        <h2>To the remote LightControl</h2>
+        <p> This app has been made to control RGB light bulb from Magic Blue.</p>
+        <p> The connection is establishing over Bluetooth with BLE protocol.</p>
+        <p> The app has been made by <strong>Roman Lutai</strong> <a href="https://github.com/romanlutai">(GitHub)</a> as a part of a thesis work.</p>
+        <!-- <div class="loader"></div> -->
     </div>
 
     <div class="comments dark" id="semiLog"><div class="logline"> Log is clear </div></div>
 
     <ul class="footer-nav">
       <li><a class="active" onclick="showlayer(this,'layerHome')">HOME</a></li>
-      <li><a onclick="showlayer(this,'layerRGB');getColorPicker()">COLOR</a></li>
-      <li><a href="#light.html">LIGHT</a></li>
-      <li><a href="#other.html">MISC</a></li>
+      <li><a onclick="showlayer(this,'layerRGB',true);getColorPicker();hideLoader()">COLOR</a></li>
+      <li><a onclick="showlayer(this,'layerWhite');defineWhiteRange('slider_White')">LIGHT</a></li>
+      <li><a onclick="showlayer(this,'layerInfo')">INFO</a></li>
     </ul>
+
+    <div id="loaderWrapper">
+        <div class="loader-window">
+            <p> Loading. Please, wait. </p>
+            <div class="loader"></div>
+        </div>
+    </div>
 
 
     <script type="text/javascript" src="cordova.js"></script>
