@@ -48,12 +48,30 @@ var app = {
   }
 };
 
-var showlayer = (el,id) => {
+var showlayer = (el,id,loader=false) => {
   document.getElementsByClassName("show")[0].classList.remove("show");
   document.getElementsByClassName("footer-nav")[0].getElementsByClassName("active")[0].classList.remove("active");
   document.getElementById(id).classList.add("show");
   el.classList.add("active");
+  if (loader) {
+    document.getElementById("loaderWrapper").classList.add("show");
+  }
 };
+
+var hideLoader = () => {
+  // document.getElementById("loaderWrapper").classList.remove("show");
+}
+
+var defineWhiteRange = (id) => { if (!this.used) {
+    element = document.getElementById(id);
+    element.addEventListener( "input", function(){
+      activeBLE.sendRGBW(0,0,0,element.value);
+    });
+    this.used = true;
+  }
+};
+
+
 
 var semiLog = {
   logWindow: document.getElementById('semiLog'),
